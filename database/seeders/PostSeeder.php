@@ -12,6 +12,6 @@ class PostSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\User::factory(30)->create();
     }
 }
