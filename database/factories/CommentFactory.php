@@ -19,7 +19,7 @@ class CommentFactory extends Factory
         return [
             'user_id' => mt_rand(1, 5),
             'post_id' => mt_rand(1, 10),
-            'body' => fake()->paragraph(5)
+            'body' => fake()->paragraph(1)
         ];
     }
 }
