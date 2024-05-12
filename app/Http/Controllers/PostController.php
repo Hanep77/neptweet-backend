@@ -12,8 +12,7 @@ class PostController extends Controller
 {
     public function index(Request $request)
     {
-        $page = $request->input("page");
-        $posts = Post::query()->with("comments")->paginate(perPage: 20, page: $page);
+        $posts = Post::query()->inRandomOrder()->with(["user", "comments"])->paginate(perPage: 30);
         return PostResource::collection($posts);
     }
 
