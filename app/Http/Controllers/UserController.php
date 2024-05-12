@@ -57,4 +57,9 @@ class UserController extends Controller
             "message" => "success logout"
         ], 200);
     }
+
+    public function me(Request $request)
+    {
+        return $request->user();
+    }
 }
