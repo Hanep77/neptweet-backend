@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Models\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
@@ -61,5 +62,11 @@ class UserController extends Controller
     public function me(Request $request)
     {
         return $request->user();
+    }
+
+    public function getPosts()
+    {
+        $user = auth()->user();
+        return PostResource::collection($user->posts);
     }
 }
