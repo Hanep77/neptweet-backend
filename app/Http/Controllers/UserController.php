@@ -66,7 +66,10 @@ class UserController extends Controller
 
     public function getPosts()
     {
+        /**
+         * @var User
+         */
         $user = auth()->user();
-        return PostResource::collection($user->posts);
+        return PostResource::collection($user->posts()->latest()->get());
     }
 }
