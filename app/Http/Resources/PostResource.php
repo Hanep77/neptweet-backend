@@ -19,9 +19,9 @@ class PostResource extends JsonResource
             "body" => $this->body,
             "created_at" => $this->created_at,
             "author" => [
+                "id" => $this->user->id,
                 "name" => $this->user->name,
-                "created_at" => $this->user->created_at,
-                "body" => $this->user->body
+                "created_at" => $this->user->created_at
             ],
             "comments" => $this->comments->toArray()
         ];
