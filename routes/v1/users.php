@@ -10,6 +10,7 @@ Route::middleware("guest")->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get("/me", [UserController::class, 'me']);
-    Route::get('/user/posts', [UserController::class, 'getPosts']);
+    Route::get("/users/search", [UserController::class, 'search']);
+    Route::get("/users/{id}", [UserController::class, 'show']);
     Route::post('/logout', [UserController::class, 'logout']);
 });

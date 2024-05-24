@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
@@ -59,17 +60,38 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function me(Request $request)
+    public function search(Request $request)
     {
-        return $request->user();
+        $query = join(" ", explode('+', $request->input('query')));
+        $query = preg_replace('/\s+/', ' ', $query);
+        $users = User::query()->where('name', 'LIKE', "%$query%")->get();
+        if (!count($users)) {
+            throw new HttpResponseException(response([
+                "error" => [
+                    "message" => "Not Found"
+                ]
+            ], 404));
+        }
+        return UserResource::collection($users);
     }
 
-    public function getPosts()
+    public function show($id)
     {
-        /**
-         * @var User
-         */
-        $user = auth()->user();
-        return PostResource::collection($user->posts()->latest()->get());
+        $user = User::query()->with('posts')->find($id);
+
+        if (!$user) {
+            throw new HttpResponseException(response([
+                "error" => [
+                    "message" => "Not Found"
+                ]
+            ], 404));
+        }
+
+        return new UserResource($user);
+    }
+
+    public function me(Request $request)
+    {
+        return new UserResource($request->user()->load('posts'));
     }
 }
