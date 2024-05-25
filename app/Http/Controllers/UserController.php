@@ -77,7 +77,14 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = User::query()->with('posts')->find($id);
+        $user = User::query()->with(['posts' => function ($query) {
+            $query->withCount('likes');
+        }])->find($id);
+
+        $user->posts->each(function ($post) {
+            $post->is_liked_by_user = $post->likes->contains('user_id', Auth::user()->id);
+        });
+
 
         if (!$user) {
             throw new HttpResponseException(response([

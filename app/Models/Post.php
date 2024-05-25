@@ -22,4 +22,14 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class, "post_id", "id");
     }
+
+    public function likes(): HasMany
+    {
+        return $this->hasMany(Like::class, "post_id", "id");
+    }
+
+    public function LikesCount()
+    {
+        return $this->likes()->count();
+    }
 }
