@@ -99,6 +99,14 @@ class UserController extends Controller
 
     public function me(Request $request)
     {
-        return new UserResource($request->user()->load('posts'));
+        $user = $request->user()->load(['posts' => function ($query) {
+            $query->withCount('likes');
+        }]);
+
+        $user->posts->each(function ($post) {
+            $post->is_liked_by_user = $post->likes->contains('user_id', Auth::user()->id);
+        });
+
+        return new UserResource($user);
     }
 }
