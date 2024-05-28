@@ -39,8 +39,7 @@ class PostController extends Controller
 
     public function update(Request $request, $id)
     {
-        $post = Post::query()->withCount("likes")->with(["user", "comments"])->find($id);
-        $post->is_liked_by_user = $post->likes->contains('user_id', Auth::user()->id);
+        $post = Post::query()->find($id);
 
         if (!$post) {
             throw new HttpResponseException(response([
