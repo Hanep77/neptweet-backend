@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PostResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse | HttpResponseException
     {
-        // validate the request
         $credentials = $request->validate([
             "email" => ["required"],
             "password" => ["required"]
@@ -36,7 +36,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     {
         $validated = $request->validate([
             "name" => ["required", "max:100"],
@@ -45,14 +45,14 @@ class UserController extends Controller
         ]);
 
         $validated["password"] = Hash::make($validated["password"]);
-        $user = User::create($validated);
+        $user = User::query()->create($validated);
 
         return response()->json([
             "data" => $user
         ], 201);
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         $request->user()->tokens()->delete();
         return response()->json([
@@ -60,7 +60,7 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function search(Request $request)
+    public function search(Request $request): ResourceCollection | HttpResponseException
     {
         $query = join(" ", explode('+', $request->input('query')));
         $query = preg_replace('/\s+/', ' ', $query);
@@ -75,7 +75,7 @@ class UserController extends Controller
         return UserResource::collection($users);
     }
 
-    public function show($id)
+    public function show(int $id): UserResource | HttpResponseException
     {
         $user = User::query()->with(['posts' => function ($query) {
             $query->withCount('likes');
@@ -97,7 +97,7 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-    public function me(Request $request)
+    public function me(Request $request): UserResource
     {
         $user = $request->user()->load(['posts' => function ($query) {
             $query->withCount('likes');
