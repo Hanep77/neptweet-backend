@@ -5,17 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
-    public function index()
+    public function index(): ResourceCollection
     {
         return CommentResource::collection(Comment::all());
     }
 
-    public function store(Request $request)
+    public function store(Request $request): CommentResource
     {
         $validated = $request->validate([
             "post_id" => ["required"],
@@ -26,10 +28,10 @@ class CommentController extends Controller
         $validated["user_id"] = $user_id;
 
         $comment = Comment::query()->create($validated);
-        return response(new CommentResource($comment), 201);
+        return new CommentResource($comment);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): CommentResource | HttpResponseException
     {
         $comment = Comment::query()->find($id);
 
@@ -47,7 +49,7 @@ class CommentController extends Controller
         return new CommentResource($comment);
     }
 
-    public function delete($id)
+    public function delete(int $id): JsonResponse | HttpResponseException
     {
         $comment = Comment::query()->find($id);
 

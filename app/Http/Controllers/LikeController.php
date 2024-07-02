@@ -6,19 +6,20 @@ use App\Models\Like;
 use App\Models\Post;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class LikeController extends Controller
 {
-    private function isNotFound($post): void
+    private function isNotFound(Post $post): HttpResponseException | null
     {
         if (!$post) {
             throw new HttpResponseException(response([
                 "not found"
             ], 404));
         }
+
+        return null;
     }
 
     public function store(int $id): JsonResponse

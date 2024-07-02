@@ -28,8 +28,8 @@ class Post extends Model
         return $this->hasMany(Like::class, "post_id", "id");
     }
 
-    public function LikesCount()
+    public function LikesCount(): int
     {
-        return $this->likes()->count();
+        return count($this->likes());
     }
 }
