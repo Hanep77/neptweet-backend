@@ -18,7 +18,7 @@ class PostFactory extends Factory
     {
         return [
             'user_id' => mt_rand(1, 5),
-            'body' => fake()->paragraph(3)
+            'body' => json_encode(["hmm", "hmm"])
         ];
     }
 }

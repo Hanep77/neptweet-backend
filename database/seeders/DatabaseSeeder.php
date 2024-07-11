@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
             'password' => bcrypt('password'),
         ]);
-        \App\Models\Post::factory(30)->create();
-        \App\Models\Comment::factory(50)->create();
+        \App\Models\Post::factory(5)->create();
+        \App\Models\Comment::factory(10)->create();
     }
 }

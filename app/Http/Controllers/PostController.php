@@ -32,6 +32,7 @@ class PostController extends Controller
 
         $user = Auth::user();
         $validated["user_id"] = $user->id;
+        $validated["body"] = json_encode($validated["body"]);
 
         $post = Post::query()->create($validated);
         $post->is_liked_by_user = $post->likes->contains('user_id', Auth::user()->id);
