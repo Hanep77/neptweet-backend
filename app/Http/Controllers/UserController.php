@@ -79,6 +79,7 @@ class UserController extends Controller
     {
         $user = User::query()->with(['posts' => function ($query) {
             $query->withCount('likes');
+            $query->orderBy('created_at', 'desc');
         }])->find($id);
 
         $user->posts->each(function ($post) {
